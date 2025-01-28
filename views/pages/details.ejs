@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Détails de l'Issue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow">
+      <nav class="container mx-auto p-4 flex justify-between">
+        <div>
+          <a href="/" class="text-xl font-bold">EnIssue</a>
+        </div>
+        <div>
+          <a href="/" class="mr-4">Accueil</a>
+          <a href="/create" class="mr-4 text-indigo-600 font-bold">Ajouter une Issue</a>
+        </div>
+      </nav>
+    </header>
+    <main class="flex justify-center items-center">
+      <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md mt-8">
+        <h1 class="text-2xl font-bold text-center mb-6">Détails de l'Issue</h1>
+        <div class="mb-4">
+          <span class="font-bold">Titre: </span> <%= issue.title %>
+        </div>
+        <div class="mb-4">
+          <span class="font-bold">Créé par: </span> <%= issue.author %> le <%= issue.createdAt %>
+        </div>
+        <div class="mb-4">
+          <span class="font-bold">Description: </span> <%= issue.description %>
+        </div>
+        <div class="mb-4">
+          <span class="font-bold">Statut: </span> <%= issue.status %>
+        </div>
+        <form action="/issues/delete" method="POST" style="display: inline;">
+          <input type="hidden" name="index" value="<%= index %>" />
+          <button type="submit" class="button-delete">Supprimer</button>
+        </form>
+        <form action="/issues/edit/<%= index %>" method="GET" style="display: inline;">
+          <button type="submit" class="button-edit">Modifier</button>
+        </form>
+        <div class="flex justify-center mt-4">
+          <a href="/" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Retour</a>
+        </div>
+
+        <h2 class="text-xl font-semibold mt-8 mb-4">Réponses</h2>
+        <ul class="mb-6 space-y-2">
+          <% if (issue.responses && issue.responses.length > 0) { %>
+            <% issue.responses.forEach(function(response, responseIndex) { %>
+              <li class="border-b border-gray-200 py-2">
+                <div class="mb-2">
+                  <span class="font-bold">Auteur: </span> <%= response.author %><br>
+                  <span class="font-bold">Message: </span> <%= response.message %><br>
+                  <span class="font-bold">Créé le: </span> <%= response.createdAt %>
+                </div>
+                <form action="/issues/<%= index %>/responses/delete/<%= responseIndex %>" method="POST" style="display: inline;">
+                  <button type="submit" class="button-delete">Supprimer</button>
+                </form>
+                <form action="/issues/<%= index %>/responses/edit/<%= responseIndex %>" method="GET" style="display: inline;">
+                  <button type="submit" class="button-edit">Modifier</button>
+                </form>
+              </li>
+            <% }); %>
+          <% } else { %>
+            <li>Aucune réponse pour le moment.</li>
+          <% } %>
+        </ul>
+
+        <h2 class="text-xl font-semibold mb-4">Ajouter une Réponse</h2>
+        <form action="/issues/<%= index %>/responses/create" method="POST" class="space-y-6">
+          <div>
+            <label for="author" class="block text-lg font-medium text-gray-700">Auteur :</label>
+            <input
+              type="text"
+              id="author"
+              name="author"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Entrez votre nom"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="message" class="block text-lg font-medium text-gray-700">Message :</label>
+            <textarea
+              id="message"
+              name="message"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Entrez votre réponse"
+              required
+            ></textarea>
+          </div>
+
+          <div class="flex justify-center">
+            <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              Envoyer
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
